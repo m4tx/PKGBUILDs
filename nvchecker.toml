@@ -29,11 +29,8 @@ prefix = "cot-cli-v"
 include_regex = "^cot-cli-v.+$"
 
 [fernflower-git]
-source = "github"
-github = "JetBrains/fernflower"
-use_max_tag = true
-prefix = "idea/"
-include_regex = "^idea/.+$"
+source = "manual"
+manual = "261.20362.25.r20.gd426f6e"
 
 [multi-gitter]
 source = "github"
@@ -59,7 +56,5 @@ use_max_tag = true
 prefix = "v"
 
 [tundra-git]
-source = "github"
-github = "m4tx/tundra"
-use_max_tag = true
-prefix = "v"
+source = "manual"
+manual = "0.5.4.r26.gaf90cf7"
