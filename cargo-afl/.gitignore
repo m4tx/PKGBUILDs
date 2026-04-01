@@ -1,0 +1,7 @@
+AFLplusplus/
+afl.rs/
+src/
+pkg/
+*.tar.zst
+*.tar.gz
+*.log
