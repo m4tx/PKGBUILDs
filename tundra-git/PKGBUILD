@@ -1,6 +1,6 @@
 # Maintainer: Mateusz Maćkowski <mateusz@mackowski.org>
 pkgname=tundra-git
-pkgver=0.5.4.r26.gaf90cf7
+pkgver=0.5.4
 pkgrel=1
 epoch=
 pkgdesc="MyAnimeList scrobbler (git version)"
@@ -23,7 +23,7 @@ source=("git+https://github.com/m4tx/tundra.git"
         "https://raw.githubusercontent.com/erengy/anime-relations/master/anime-relations.txt")
 noextract=()
 md5sums=('SKIP'
-         'SKIP')
+         '71d7e89fdcd7de70a33c4d9ef5e2945f')
 validpgpkeys=()
 
 pkgver() {
