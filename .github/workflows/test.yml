@@ -21,7 +21,7 @@ jobs:
       - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # ratchet:actions/setup-python@v6
         with:
           python-version: 3.12
-      - uses: pre-commit/action@2c7b3805fd2a0fd8c1884dcaebf91fc102a13ecd # ratchet:pre-commit/action@v3.0.1
+      - uses: j178/prek-action@e98a699c41eb69ab013a45817a0406469a748f8d # ratchet:j178/prek-action@v2
         with:
           extra_args: --files $(git diff origin/master HEAD --name-only | tr '\n' ' ')
   postsubmit:
@@ -35,7 +35,7 @@ jobs:
       - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # ratchet:actions/setup-python@v6
         with:
           python-version: 3.12
-      - uses: pre-commit/action@2c7b3805fd2a0fd8c1884dcaebf91fc102a13ecd # ratchet:pre-commit/action@v3.0.1
+      - uses: j178/prek-action@e98a699c41eb69ab013a45817a0406469a748f8d # ratchet:j178/prek-action@v2
         with:
           extra_args: --files $(git diff origin/master~1 HEAD --name-only | tr '\n' ' ')
   shellcheck:
