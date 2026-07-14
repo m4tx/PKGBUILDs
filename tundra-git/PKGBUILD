@@ -1,6 +1,6 @@
 # Maintainer: Mateusz Maćkowski <mateusz@mackowski.org>
 pkgname=tundra-git
-pkgver=0.5.4.r30.gb66b0f6
+pkgver=0.5.4.r26.gaf90cf7
 pkgrel=1
 epoch=
 pkgdesc="MyAnimeList scrobbler (git version)"
