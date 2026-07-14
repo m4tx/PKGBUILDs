@@ -14,12 +14,12 @@ DIR=$1
 if command -v makepkg >/dev/null && [ -z "${PKGBUILD_DOCKER:-}" ]; then
 	pushd "$DIR" || exit
 	# Don't install (-i) since we may not have root permissions and might hang.
-	yes | makepkg -sf
+	makepkg -sf --noconfirm
 else
 	docker run \
 		--rm \
 		-v "$PWD":"/mnt" \
 		-w /mnt \
 		lahmanja/archlinux:2026-03-01 \
-		bash -c "pacman -Sy && chown builder -R ${DIR} && su builder -c 'cd ${DIR} && yes | makepkg -Csi' && chown root -R ${DIR}"
+		bash -c "pacman -Sy --noconfirm && chown builder -R ${DIR} && su builder -c 'cd ${DIR} && makepkg -Csi --noconfirm' && chown root -R ${DIR}"
 fi
