@@ -16,7 +16,7 @@ runs:
     # the hook environments and the Go toolchain prek downloads for the pkglint
     # hook -- the build user's own $HOME wouldn't be restored into or saved from.
     - name: Install prek
-      uses: j178/prek-action@1382ad72dea72f9d53832f2bcb65b3e87a947204 # ratchet:j178/prek-action@v3.0.1
+      uses: j178/prek-action@44924fe9ef4a6f88253c4b6b1bf11c689d3ce53d # ratchet:j178/prek-action@v3.1.0
       env:
         PREK_HOME: ${{ runner.temp }}/prek
       with:
