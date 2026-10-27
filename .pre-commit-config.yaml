@@ -1,79 +1,77 @@
 repos:
-  - repo: local
+  - repo: https://github.com/jmelahman/pkglint
+    rev: a3b3651b15d3c2b04b2548a39925643a625d5f4e # frozen: v1.6.1
     hooks:
-      - id: binaryninja-free
-        name: binaryninja-free
-        entry: ./build binaryninja-free
-        language: system
-        files: ^binaryninja-free/PKGBUILD$
-        pass_filenames: false
-
-      - id: cargo-afl
-        name: cargo-afl
-        entry: ./build cargo-afl
-        language: system
+      - id: pkglint
+        args: ["--ignore", "PB906"]
+      - id: pkglint-build
+        # -s lets makepkg install what the package needs. It only reaches for
+        # sudo when something is actually missing, so a local run with the
+        # dependencies already installed never prompts; CI grants the build user
+        # passwordless `sudo pacman` for the case where they are not.
+        args: ["--makepkg-arg=-s"]
+        # The packages below are handled by the scoped entries that follow,
+        # which waive a rule that cannot be satisfied. The build refuses on
+        # static findings regardless of in-file `# pkglint: ignore=`
+        # directives, and built-package findings anchor to paths inside the
+        # archive rather than to a line of the PKGBUILD, so neither can be
+        # waived from the PKGBUILD itself.
+        exclude: ^(binaryninja-free|cargo-afl|cargo-loc|fernflower-git|tundra-git)/
+      # AFLplusplus is afl.rs's git submodule, so it lives under its own org.
+      - id: pkglint-build
+        alias: pkglint-build-submodule
+        name: pkglint-build (submodule from another forge owner)
+        args: ["--makepkg-arg=-s", "--ignore=PB109"]
         files: ^cargo-afl/PKGBUILD$
-        pass_filenames: false
-
-      - id: cargo-loc
-        name: cargo-loc
-        entry: ./build cargo-loc
-        language: system
-        files: ^cargo-loc/PKGBUILD$
-        pass_filenames: false
-
-      - id: chr
-        name: chr
-        entry: ./build chr
-        language: system
-        files: ^chr/PKGBUILD$
-        pass_filenames: false
-
-      - id: cot
-        name: cot
-        entry: ./build cot
-        language: system
-        files: ^cot/PKGBUILD$
-        pass_filenames: false
-
-      - id: fernflower-git
-        name: fernflower-git
-        entry: ./build fernflower-git
-        language: system
+      # A prebuilt upstream release: its binaries' link flags cannot be changed,
+      # and the bundle ships no licence text.
+      - id: pkglint-build
+        alias: pkglint-build-prebuilt
+        name: pkglint-build (prebuilt upstream binaries)
+        args: ["--makepkg-arg=-s", "--ignore=PB805,PB810,PB834"]
+        files: ^binaryninja-free/PKGBUILD$
+      # pkglint does not match the installed java-runtime provider against the
+      # versioned `java-runtime>=8` dependency.
+      - id: pkglint-build
+        alias: pkglint-build-java
+        name: pkglint-build (versioned java-runtime dependency)
+        args: ["--makepkg-arg=-s", "--ignore=PB814"]
         files: ^fernflower-git/PKGBUILD$
-        pass_filenames: false
-
-      - id: multi-gitter
-        name: multi-gitter
-        entry: ./build multi-gitter
-        language: system
-        files: ^multi-gitter/PKGBUILD$
-        pass_filenames: false
-
-      - id: rewrk
-        name: rewrk
-        entry: ./build rewrk
-        language: system
-        files: ^rewrk/PKGBUILD$
-        pass_filenames: false
-
-      - id: topiary
-        name: topiary
-        entry: ./build topiary
-        language: system
-        files: ^topiary/PKGBUILD$
-        pass_filenames: false
-
-      - id: tundra
-        name: tundra
-        entry: ./build tundra
-        language: system
-        files: ^tundra/PKGBUILD$
-        pass_filenames: false
-
-      - id: tundra-git
-        name: tundra-git
-        entry: ./build tundra-git
-        language: system
+      # Upstream ships no licence file, in the release or in the repository --
+      # only an SPDX identifier in package metadata.
+      - id: pkglint-build
+        alias: pkglint-build-unlicensed
+        name: pkglint-build (upstream ships no licence text)
+        args: ["--makepkg-arg=-s", "--ignore=PB834"]
+        files: ^cargo-loc/PKGBUILD$
+      # A -git package tracking anime-relations' master branch; the file
+      # changes upstream, so it cannot carry a checksum.
+      - id: pkglint-build
+        alias: pkglint-build-unpinned
+        name: pkglint-build (tracks an unpinned upstream file)
+        args: ["--makepkg-arg=-s", "--ignore=PB101"]
         files: ^tundra-git/PKGBUILD$
-        pass_filenames: false
+  # shellcheck-py rather than koalaman's own hook: that one is a docker_image
+  # hook, and CI runs the hooks inside a container, where there is no docker.
+  - repo: https://github.com/shellcheck-py/shellcheck-py
+    rev: a6564f5d57444e123433a5c9af733e3975c77229 # v0.11.0.1-1
+    hooks:
+      - id: shellcheck
+        args:
+          [
+            "--severity=style",
+            "--color=always",
+            "--shell=bash",
+            "--exclude=SC2034,SC2154",
+          ]
+  - repo: https://github.com/zizmorcore/zizmor-pre-commit
+    rev: cef8b8350da46d8114c7e6b7272aebdccdf193ce # v1.30.0
+    hooks:
+      - id: zizmor
+  - repo: https://github.com/rhysd/actionlint
+    rev: 914e7df21a07ef503a81201c76d2b11c789d3fca # v1.7.12
+    hooks:
+      - id: actionlint
+        # actionlint does not know the `$/` self-repository syntax yet:
+        # https://github.com/rhysd/actionlint/issues/711
+        args: ['-ignore=specifying action "\$/.*" in invalid format']
